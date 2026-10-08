@@ -4,97 +4,60 @@
 <title>세레스 온라인 랭킹 대시보드</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
-:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f4f5f7;--cd:#fff;--tx:#16181d;--mu:#5b616c;--ac:#3b5b8c;--bd:#d9dde5;--up:#168a4a;--dn:#d23b3b;--sh:0 6px 20px rgba(20,30,50,.12)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101216;--cd:#181b21;--tx:#eceef2;--mu:#a3a9b5;--ac:#7fa2d4;--bd:#2c313b;--up:#4cc27f;--dn:#f06a6a;--sh:0 6px 20px rgba(0,0,0,.5)}}
-:root[data-theme="dark"]{--bg:#101216;--cd:#181b21;--tx:#eceef2;--mu:#a3a9b5;--ac:#7fa2d4;--bd:#2c313b;--up:#4cc27f;--dn:#f06a6a;--sh:0 6px 20px rgba(0,0,0,.5)}
-*,*:before,*:after{box-sizing:inherit}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f4f5f7;--cd:#fff;--tx:#16181d;--mu:#555b66;--ac:#3b5b8c;--bd:#d3d8e0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101216;--cd:#181b21;--tx:#eceef2;--mu:#a3a9b5;--ac:#7fa2d4;--bd:#2c313b}}
+:root[data-theme="dark"]{--bg:#101216;--cd:#181b21;--tx:#eceef2;--mu:#a3a9b5;--ac:#7fa2d4;--bd:#2c313b}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 "Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Noto Sans KR",sans-serif}
 main{max-width:920px;margin:0 auto;padding:16px}
-h1{font-size:28px;font-weight:900;margin:6px 0}
-h2{font-size:18px;font-weight:700;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px}
-h2:before{content:"";width:4px;height:18px;border-radius:2px;background:var(--ac)}
-h2 .mu{font-size:12px;font-weight:400}
+h1{font-size:22px;margin:8px 0}h2{font-size:17px;margin:0 0 10px}
 .cd{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:16px;margin:14px 0}
 .mu{color:var(--mu);font-size:13px}
 input,select,button{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:8px 10px}
 button{cursor:pointer}button:hover{border-color:var(--ac)}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
-.k{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;min-width:0}
-.k b{display:block;font-size:22px;font-weight:700;line-height:1.3}
-.k .pc{display:block;font-size:12px;font-weight:500;color:var(--mu)}
-.tw{overflow-x:auto}
-table{border-collapse:collapse;width:100%;min-width:420px}
-th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--bd);vertical-align:middle}
-th{background:color-mix(in srgb,var(--tx) 8%,var(--cd));font-weight:700;white-space:nowrap}
-tr:nth-child(even) td{background:color-mix(in srgb,var(--tx) 3%,transparent)}
-td:first-child{font-weight:700}
-.x:not(.open) tr.h{display:none}
-.more{display:block;width:100%;margin-top:8px;text-align:center;color:var(--ac);font-weight:500}
-.chip{border-radius:999px;padding:5px 12px;font-size:13px;font-weight:500}
-.chip.on{background:var(--ac);color:#fff;border-color:var(--ac)}
-.pie{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
-.pie svg{width:240px;height:240px;flex:none}.pie svg path{stroke:var(--cd);stroke-width:2}.pie svg path:hover{opacity:.8}
-.lg{flex:1;min-width:230px}
-.lg div{display:flex;gap:8px;align-items:center;font-size:15px;font-weight:500;padding:3px 0}
-.lg i{width:14px;height:14px;border-radius:3px;flex:none;display:inline-block}
-.lg b{margin-left:auto;font-weight:600;white-space:nowrap}
-.bar{display:flex;align-items:center;gap:6px;font-size:13px;margin:4px 0}.bar b{font-weight:700}
-.bar span{background:var(--ac);height:18px;border-radius:4px;display:inline-block}
-.mb{display:inline-block;width:90px;height:8px;border-radius:4px;background:color-mix(in srgb,var(--tx) 10%,transparent);vertical-align:middle;margin-right:8px;overflow:hidden}
-.mb i{display:block;height:100%;background:var(--ac)}
-em.up,em.dn,em.eq{font-style:normal;font-weight:700;margin-left:4px;white-space:nowrap}em.up{color:var(--up)}em.dn{color:var(--dn)}em.eq{color:var(--mu)}
-/* 검색 */
-.sb{position:relative;flex:1;min-width:200px}
-.sb input{width:100%}
-.sgl{position:absolute;left:0;right:0;top:100%;margin-top:4px;background:var(--cd);border:1px solid var(--bd);border-radius:10px;box-shadow:var(--sh);z-index:20;max-height:340px;overflow:auto}
-.sgl[hidden]{display:none}
-.sg{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;border:0;border-radius:0;background:transparent;padding:10px 12px}
-.sg+.sg{border-top:1px solid var(--bd)}
-.sg.on,.sg:hover{background:color-mix(in srgb,var(--ac) 12%,transparent)}
-.sg small,.pk small{color:var(--mu);font-size:13px;white-space:nowrap}
-.pick{border:1px solid var(--bd);border-radius:10px;padding:12px;background:var(--bg)}
-.pick-t{font-weight:500;margin-bottom:8px}
-.pick-l{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
-.pk{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;background:var(--cd);padding:10px 12px}
-/* 프로필 */
-.pf-head{display:flex;gap:16px;align-items:center}
-.av{width:80px;height:80px;flex:none;border-radius:12px;overflow:hidden;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700}
-.av img{width:100%;height:100%;object-fit:cover;image-rendering:pixelated;display:block}
-.pf-name{min-width:0;flex:1}
-.pf-name b{display:block;font-size:24px;line-height:1.25;word-break:break-all}
-.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;align-items:center}
-.tag{font-size:13px;font-weight:500;padding:2px 10px;border-radius:999px;border:1px solid var(--bd);background:var(--bg);white-space:nowrap}
-.pf-sec{margin-top:14px}
-.pf-sec>.mu{margin-bottom:6px;font-weight:500}
-.pills{display:flex;flex-wrap:wrap;gap:8px}
-.pill{font-size:14px;padding:5px 12px;border-radius:8px;background:var(--bg);border:1px solid var(--bd)}
-.pill b{color:var(--ac)}
-details.dt{margin-top:12px;border:1px solid var(--bd);border-radius:10px;padding:0 12px}
-details.dt summary{cursor:pointer;padding:10px 0;font-weight:500;font-size:14px}
-details.dt[open] summary{border-bottom:1px solid var(--bd);margin-bottom:8px}
-details.dt .in{padding-bottom:10px;font-size:14px}
-.tr{display:flex;justify-content:space-between;gap:12px;padding:4px 0;flex-wrap:wrap}
-.tr span:first-child{color:var(--mu)}
-a.nk{color:var(--tx);text-decoration:none;border-bottom:1px dotted var(--mu);cursor:pointer}a.nk:hover{color:var(--ac);border-color:var(--ac)}
-.gr{display:inline-block;padding:0 10px;border-radius:7px;font:900 18px/28px "Orbitron","Noto Sans KR",sans-serif;letter-spacing:1px;color:#fff;vertical-align:middle}
+.k{background:var(--bg);border-radius:10px;padding:10px}.k b{display:block;font-size:20px}
+.av{width:56px;height:56px;border-radius:10px;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:420px}th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--bd)}
+.pie{display:flex;gap:16px;flex-wrap:wrap;align-items:center}.pie svg{width:180px;height:180px}
+.lg div{display:flex;gap:6px;align-items:center;font-size:13px}.lg i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.bar{display:flex;align-items:center;gap:6px;font-size:12px;margin:2px 0}.bar span{background:var(--ac);height:12px;border-radius:3px;display:inline-block}
+.chip{border-radius:999px;padding:5px 11px;font-size:13px}.chip.on{background:var(--ac);color:#fff;border-color:var(--ac)}.lg div{cursor:pointer}.pie svg{width:240px;height:240px;flex:none}.pie svg path{stroke:var(--cd);stroke-width:2}.pie svg path:hover{opacity:.8}
+.lg{flex:1;min-width:230px}.lg div{font-size:14px;padding:3px 0;gap:8px}.lg i{width:14px;height:14px;border-radius:3px;flex:none}.lg b{margin-left:auto;font-weight:600;white-space:nowrap}
+.bar{font-size:13px;margin:4px 0}.bar span{height:18px;border-radius:4px}
+.av{width:72px;height:72px;overflow:hidden;flex:none;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700}.av img{width:72px;height:72px;image-rendering:pixelated;display:block}body{font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;font-size:16px;line-height:1.65;color:var(--tx)}
+h1{font-family:inherit;font-size:28px;font-weight:900;margin:6px 0;color:var(--tx)}
+h2{font-family:inherit;font-size:18px;font-weight:700;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+h2:before{content:"";width:4px;height:18px;border-radius:2px;background:var(--ac)}h2 .mu{font-size:12px;font-weight:400}
+.cd{border:1px solid var(--bd)}
+.k{background:var(--bg);border:1px solid var(--bd)}.k b{font-size:22px;font-weight:700;color:var(--tx)}
+th{background:color-mix(in srgb,var(--tx) 8%,var(--cd));font-weight:700;white-space:nowrap}tr:nth-child(even) td{background:color-mix(in srgb,var(--tx) 3%,transparent)}td:first-child{font-weight:700}
+.lg div{font-size:15px;font-weight:500}.chip{font-weight:500}.chip:hover{border-color:var(--ac)}
+.bar span{background:var(--ac)}.bar b{font-weight:700}
+.av{background:var(--ac);color:#fff;border-radius:10px}a.nm{display:inline-block;margin-top:4px;font-size:13px;font-weight:500;color:var(--ac);text-decoration:none;border:1px solid var(--bd);border-radius:6px;padding:2px 8px}:root{--up:#168a4a;--dn:#d23b3b}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--up:#4cc27f;--dn:#f06a6a}}:root[data-theme="dark"]{--up:#4cc27f;--dn:#f06a6a}
+em.up,em.dn,em.eq{font-style:normal;font-weight:700;margin-left:4px;white-space:nowrap}em.up{color:var(--up)}em.dn{color:var(--dn)}em.eq{color:var(--mu)}.k .pc{display:block;font-size:12px;font-weight:500;color:var(--mu)}
+.gr{display:inline-block;margin-left:8px;padding:0 10px;border-radius:7px;font:900 19px/30px "Orbitron","Noto Sans KR",sans-serif;letter-spacing:1px;color:#fff;vertical-align:middle}
 .gSS{background:linear-gradient(135deg,#f6c445,#e08a00);color:#3a2600;box-shadow:0 0 0 2px rgba(246,196,69,.4)}
-.gS{background:#7b5cd6}.gA{background:#3b7dd8}.gB{background:#2a9d8f}.gC{background:#7d9a43}.gD{background:#c98a3b}.gF{background:#8c6b6b}
-@media (max-width:520px){h1{font-size:23px}.av{width:64px;height:64px;font-size:26px}.pf-name b{font-size:20px}.pie svg{width:200px;height:200px}}
-</style></head><body><main>
+.gS{background:#7b5cd6}.gA{background:#3b7dd8}.gB{background:#2a9d8f}.gC{background:#7d9a43}.gD{background:#c98a3b}.gF{background:#8c6b6b}table{font-size:15px}td,th{padding:9px 10px}.cd{padding:18px}h2{font-size:20px}input,select,button{font-size:15px;padding:9px 12px}.mm{margin-top:10px;text-align:center}
+.t15g{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(5,auto);grid-auto-flow:column;gap:10px}
+@media(max-width:640px){.t15g{grid-template-columns:1fr;grid-template-rows:none;grid-auto-flow:row}}
+.tc{display:flex;align-items:center;gap:10px;text-align:left;padding:10px;border-radius:10px;width:100%}.tc .rk{font-size:20px;min-width:34px;text-align:center;font-weight:900}
+.tc img{width:48px;height:48px;image-rendering:pixelated;border-radius:6px;background:var(--bd);flex:none}.tc .ti{display:flex;flex-direction:column;line-height:1.35;min-width:0}.tc .ti b{font-size:16px;overflow:hidden;text-overflow:ellipsis}
+#sc input{width:96px}</style></head><body><main>
 <h1>세레스 온라인 랭킹 대시보드</h1>
-<div id="st" class="mu">불러오는 중…</div>
-<div class="mu"><span id="asof"></span> · 공식 페이지가 공개하는 값(레벨·직업·길드·도달 층)만 사용합니다.</div>
+<div id="st" class="mu">⏳ 스크립트 실행 확인 중… (이 문구가 계속 보이면 알려주세요)</div>
+<div class="mu"><span id="asof">불러오는 중…</span> · 공식 페이지가 공개하는 값(레벨·직업·길드·도달 층)만 사용합니다.</div>
 
-<div class="cd" id="srch"><h2>내 정보 검색</h2>
-<div class="row"><div class="sb"><input id="q" placeholder="닉네임 입력 (입력하면 직업·레벨이 함께 보여요)" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="sgl"><div class="sgl" id="sgl" role="listbox" hidden></div></div><button id="go">검색</button></div>
-<div id="me" style="margin-top:12px" class="mu">닉네임을 입력하세요. 같은 닉네임이 여러 명이면 직업·레벨로 골라서 볼 수 있어요. 상위 100위 밖은 공식 페이지에 없어 조회할 수 없습니다.</div></div>
+<div class="cd"><h2>내 정보 검색</h2>
+<div class="row"><input id="q" list="nl" placeholder="닉네임 입력" autocomplete="off"><button id="go">검색</button></div><datalist id="nl"></datalist>
+<div id="me" style="margin-top:12px" class="mu">닉네임을 입력하거나 아래 TOP 15를 눌러 보세요. 수집된 전체·무기별·생활 랭킹에 있는 닉네임을 찾을 수 있어요.</div></div>
 
-<div class="cd"><h2>서버 통계 <span class="mu">수집된 전체·무기별 랭킹 기준</span></h2><div class="grid" id="kp"></div></div>
+<div class="cd"><h2>서버 통계 (수집된 전체·무기별 랭킹 기준)</h2><div class="grid" id="kp"></div></div>
 
-<div class="cd"><h2>직업 분포 <span class="mu">전체 + 무기별 랭킹 합산 · 계정별 1회 집계</span></h2><div class="pie" id="jp"></div></div>
-<div class="cd"><h2>무기 분포</h2><div class="pie" id="wp"></div><div class="mu" id="wpn" style="margin-top:8px"></div></div>
+<div class="cd"><h2>직업 분포 <span class="mu">전체 + 무기별 랭킹 합산 · 닉네임별 1회 집계</span></h2><div class="pie" id="jp"></div></div>
+<div class="cd"><h2>무기 분포</h2><div class="pie" id="wp"></div>
+<div class="mu"><span id="wn"></span>▲ 상승 · ▼ 하락은 1시간 전 대비 증감이에요. 기록이 2회 이상 쌓이면 표시돼요.</div></div>
 
 <div class="cd"><h2>레벨 분포</h2><div id="ld"></div></div>
 
@@ -102,164 +65,108 @@ a.nk{color:var(--tx);text-decoration:none;border-bottom:1px dotted var(--mu);cur
 <div class="row"><button data-d="-10">-10</button><button data-d="-1">-1</button><input id="lv" type="number" value="160" style="width:80px"><button data-d="1">+1</button><button data-d="10">+10</button></div>
 <div id="lr" style="margin-top:10px"></div></div>
 
-<div class="cd"><h2>무기 계열 요약 <span class="mu" id="wsn"></span></h2><div id="ws"></div></div>
+<div class="cd"><h2>무기 계열 요약 (공식 집계)</h2><div class="tw"><table id="ws"></table></div></div>
 
-<div class="cd"><h2>무기·직업별 랭킹</h2><div class="mu" id="jn"></div><div class="row" id="gf" style="margin-top:6px"></div><div class="row" id="jf" style="margin:8px 0"></div><div id="tt15"></div></div>
+<div class="cd"><h2>무기·직업별 랭킹</h2><div class="mu" id="jn"></div><div class="row" id="gf"></div><div class="row" id="jf" style="margin-top:8px"></div><div class="tw"><table id="tt15"></table></div><div class="mm" id="mm1"></div></div>
 
-<div class="cd"><h2>생활 랭킹 <span class="mu">TOP 10 · 나머지는 펼쳐서 보기</span></h2><div class="row" id="lf" style="margin-bottom:8px"></div><div id="lt"></div></div>
+<div class="cd"><h2>생활 랭킹 <span class="mu">공식 집계 인원</span></h2><div class="row" id="lf"></div><div class="tw"><table id="lt"></table></div><div class="mm" id="mm2"></div></div>
+
+<div class="cd"><h2>스탯 계산기 <span class="mu">공식 스탯 가이드 공식 기준 · 투자한 스탯만 입력 (장비·각인·직업 보너스 제외)</span></h2>
+<div class="row" id="sc"><label>레벨 <input id="sl" type="number" value="150"></label><label>STR <input id="s1" type="number" value="0"></label><label>DEX <input id="s2" type="number" value="0"></label><label>CON <input id="s3" type="number" value="0"></label><label>INT <input id="s4" type="number" value="0"></label></div>
+<div class="grid" id="so" style="margin-top:12px"></div><div class="mu" style="margin-top:8px">공격력은 직접 투자한 스탯만 반영되어 정확해요. 체력·치명타 등은 장비·각인을 합친 실효 스탯 기준이라 실제 게임 값은 더 높을 수 있어요. 랭킹 페이지에는 개인 스탯이 없어 전투력은 계산할 수 없어요.</div></div>
+
+<div class="cd"><h2>전체 랭킹 TOP 15 <span class="mu">누르면 위 검색창에 자동 검색돼요</span></h2><div id="top15" class="t15g"></div></div>
 
 <div class="mu" style="text-align:center;margin:24px 0 8px">비공식 팬 제작 대시보드 · 데이터 출처 <a href="https://seresonline.co.kr/ranking" target="_blank" rel="noopener" style="color:var(--ac)">seresonline.co.kr</a> · 매시간 자동 갱신</div>
 </main>
 <script>window.addEventListener("error",function(e){var d=document.createElement("div");d.style.cssText="background:#c33;color:#fff;padding:8px;font-size:13px;position:relative;z-index:9";d.textContent="오류: "+e.message+(e.lineno?" (줄 "+e.lineno+")":"");document.body.insertBefore(d,document.body.firstChild)});</script>
 <script>
-(function(){let JF="",GK="";
-const $=s=>document.querySelector(s);
-const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const num=v=>(v===""||v==null||!Number.isFinite(+v))?null:+v;
+(function(){let JF="",WK="한손검",GK="";
 async function boot(){
 const [DL,H]=window.__DATA__?[window.__DATA__.latest,window.__DATA__.history]:await Promise.all([fetch("data/latest.json",{cache:"no-store"}).then(r=>r.json()),fetch("data/history.json",{cache:"no-store"}).then(r=>r.json()).catch(()=>({snaps:[]}))]);
-const COUNTS=DL.counts||{};
 const NM={sword:"한손검",greatsword:"대검",spear:"창",dagger:"단검",bow:"활",wand:"완드",scythe:"낫",knuckle:"건틀릿",gun:"마도총"};
-const WN=Object.values(NM);
 const mk=a=>a.map((x,i)=>({r:i+1,lv:x[0],n:x[1],j:x[2],g:x[3],f:x[4]}));
 const D=mk(DL.tabs.all),W={};for(const k in NM)if(DL.tabs[k]&&DL.tabs[k].length)W[NM[k]]=mk(DL.tabs[k]);
-const WC={};WN.forEach(k=>WC[k]=num(COUNTS[k]));            // 공식 무기별 등록 수 (못 읽으면 null)
-const HAS_OFF=WN.some(k=>WC[k]!=null);
+const WC=Object.fromEntries(Object.values(NM).map(k=>[k,DL.counts[k]])),WS=Object.keys(W).map(k=>[k,WC[k]||"-",W[k][0].lv,W[k][W[k].length-1].lv,W[k].length+"위"]);
 const S=H.snaps||[],snapAt=s=>{let r=null;for(const x of S)if(x.ts<=DL.ts-s)r=x;return r};
-const WD={};if(HAS_OFF){const p=snapAt(3000);if(p)for(const k of WN)if(WC[k]!=null&&p.counts&&p.counts[k]!=null)WD[k]=WC[k]-p.counts[k]}
-const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
-const dl=v=>v==null?'<em class="eq">–</em>':v>0?'<em class="up">▲'+v+'</em>':v<0?'<em class="dn">▼'+(-v)+'</em>':'<em class="eq">–</em>';
+const WD={};{const p=snapAt(3000);if(p)for(const k in WC)if(p.counts[k]!=null)WD[k]=WC[k]-p.counts[k]}
 const trend=n=>[["1주",604800],["2주",1209600],["1개월",2592000]].map(([l,s])=>{const p=snapAt(s),q=p&&p.ranks[n],c=S.length&&S[S.length-1].ranks[n];return[l+" 전 대비",q&&c?`순위 ${q[0]}→${c[0]}${dl(q[0]-c[0])} · Lv ${q[1]}→${c[1]}${dl(c[1]-q[1])}`:"기록 없음"]});
-const spark=n=>{const p=S.filter(x=>x.ranks[n]);if(p.length<2)return"";const a=p.map(x=>x.ranks[n][0]),mx=Math.max(...a),mn=Math.min(...a),w=300,h=50,d=a.map((v,i)=>`${i/(a.length-1)*w},${mx==mn?h/2:(v-mn)/(mx-mn)*(h-6)+3}`).join(" ");return`<div class="mu" style="margin-top:8px">순위 추이 (위쪽이 높은 순위 · ${a.length}회 기록)</div><svg viewBox="0 0 ${w} ${h}" style="width:100%;max-width:420px"><polyline points="${d}" fill="none" stroke="var(--ac)" stroke-width="2"/></svg>`};
+const spark=n=>{const p=S.filter(x=>x.ranks[n]);if(p.length<2)return"";const a=p.map(x=>x.ranks[n][0]),mx=Math.max(...a),mn=Math.min(...a),w=300,h=50,d=a.map((v,i)=>`${i/(a.length-1)*w},${mx==mn?h/2:(v-mn)/(mx-mn)*(h-6)+3}`).join(" ");return`<div class="mu" style="margin-top:10px">순위 추이 (위쪽이 높은 순위 · ${a.length}회 기록)</div><svg viewBox="0 0 ${w} ${h}" style="width:100%;max-width:420px"><polyline points="${d}" fill="none" stroke="var(--ac)" stroke-width="2"/></svg>`};
+
+
+const $=s=>document.querySelector(s),avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
 $("#asof").textContent=DL.base+" 기준 · 매시간 자동 갱신 (수집 "+new Date(DL.ts*1000).toLocaleString("ko-KR")+")";
 const C=["#5b7c99","#c27c5a","#6b9080","#a58aa5","#c9a85c","#8a9a5b","#b86b6b","#7fa3b5","#9c8b7a","#9aa0a8"];
 const cnt=(a,f)=>{const m={};a.forEach(x=>m[f(x)]=(m[f(x)]||0)+1);return Object.entries(m).sort((x,y)=>y[1]-x[1])};
 const grade=(r,p)=>r<=3?"SS":r<=50?"S":r<=100?"A":p<=30?"B":p<=50?"C":p<=70?"D":"F";
-
-/* ---------- 공통 UI 도우미 ---------- */
-function pie(el,items,delta){items=items.filter(i=>Number.isFinite(i[1])&&i[1]>0);const t=items.reduce((s,i)=>s+i[1],0);
-if(!t){$(el).innerHTML='<div class="mu">표시할 데이터가 없습니다.</div>';return}
-let a=-Math.PI/2,p="";
-items.forEach((it,i)=>{let b=a+it[1]/t*2*Math.PI;if(items.length==1)b=a+2*Math.PI-.0001;const R=100,r=58,c=Math.cos,s=Math.sin,g=b-a>Math.PI?1:0;
-p+=`<path d="M${110+R*c(a)} ${110+R*s(a)}A${R} ${R} 0 ${g} 1 ${110+R*c(b)} ${110+R*s(b)}L${110+r*c(b)} ${110+r*s(b)}A${r} ${r} 0 ${g} 0 ${110+r*c(a)} ${110+r*s(a)}Z" fill="${C[i%C.length]}"><title>${esc(it[0])} ${it[1]}</title></path>`;a=b});
-$(el).innerHTML=`<svg viewBox="0 0 220 220">${p}<text x="110" y="106" text-anchor="middle" font-size="12" fill="var(--mu)">합계</text><text x="110" y="128" text-anchor="middle" font-size="22" font-weight="700" fill="var(--tx)">${t}</text></svg><div class="lg">${items.map((it,i)=>`<div><i style="background:${C[i%C.length]}"></i>${esc(it[0])}<b>${it[1]} · ${(it[1]/t*100).toFixed(1)}%${delta?" "+dl(delta[it[0]]):""}</b></div>`).join("")}</div>`}
-/* 표: 상위 lim개만 보이고 나머지는 '펼쳐 보기' */
-function tbl(head,rows,lim){lim=lim||10;const h="<tr>"+head.map(x=>`<th>${x}</th>`).join("")+"</tr>";
-const body=rows.map((r,i)=>i>=lim?r.replace("<tr>",'<tr class="h">'):r).join("");const ex=rows.length-lim;
-return`<div class="x"><div class="tw"><table>${h}${body}</table></div>${ex>0?`<button class="more" type="button" data-ex="${ex}">▼ 나머지 ${ex}명 펼쳐 보기</button>`:""}</div>`}
-const nk=(n,lv)=>n?`<a class="nk" data-n="${esc(n)}" data-lv="${lv==null?"":lv}" title="프로필 보기">${esc(n)}</a>`:"비공개";
-
-/* ---------- 계정 목록 만들기 (같은 닉네임이라도 레벨이 다르면 별개 계정) ---------- */
+const dl=v=>v==null?'<em class="eq">–</em>':v>0?'<em class="up">▲'+v+'</em>':v<0?'<em class="dn">▼'+(-v)+'</em>':'<em class="eq">–</em>';
+function pie(el,items,delta){const t=items.reduce((s,i)=>s+i[1],0);let a=-Math.PI/2,p="";
+items.forEach((it,i)=>{const b=a+it[1]/t*2*Math.PI,R=100,r=58,c=Math.cos,s=Math.sin,g=b-a>Math.PI?1:0;
+p+=`<path d="M${110+R*c(a)} ${110+R*s(a)}A${R} ${R} 0 ${g} 1 ${110+R*c(b)} ${110+R*s(b)}L${110+r*c(b)} ${110+r*s(b)}A${r} ${r} 0 ${g} 0 ${110+r*c(a)} ${110+r*s(a)}Z" fill="${C[i%C.length]}"><title>${it[0]} ${it[1]}</title></path>`;a=b});
+$(el).innerHTML=`<svg viewBox="0 0 220 220">${p}<text x="110" y="106" text-anchor="middle" font-size="12" fill="var(--mu)">합계</text><text x="110" y="128" text-anchor="middle" font-size="22" font-weight="700" fill="var(--tx)">${t}</text></svg><div class="lg">${items.map((it,i)=>`<div><i style="background:${C[i%C.length]}"></i>${it[0]}<b>${it[1]} · ${(it[1]/t*100).toFixed(1)}%${delta?" "+dl(delta[it[0]]):""}</b></div>`).join("")}</div>`}
 const LN=[["mining","채광","life"],["gathering","채집","life"],["fishing","낚시","life"],["smithing","제련","life"],["alchemy","연금","life"],["cooking","요리","life"],["blacksmith","대장장이","prof"],["gatherer","채집가","prof"],["alchemist","연금사","prof"],["chef","요리사","prof"]];
-const LIFE=LN.filter(([k])=>DL.tabs[k]&&DL.tabs[k].length).map(([k,name,kind])=>({name,kind,cnt:num(COUNTS[name]),rows:DL.tabs[k].map(x=>kind=="life"?{ll:x[0],n:x[1],ul:x[2],j:x[3],g:x[4]}:{lv:x[0],n:x[1],j:x[2],g:x[3],f:x[4]})}));
-const JW={"각성 월영의 그림자":"단검","월영의 그림자":"단검","수도승":"건틀릿","권사":"건틀릿","각성 팔라딘":"한손검","팔라딘":"한손검","검성":"한손검","검호":"한손검","바바리안":"대검","수호자":"대검","기사":"대검","근위대장":"대검","백야기사":"창","천창":"창","창성":"창","비스트테이머":"활","공허추적자":"활","추적자":"활","명궁":"활","사냥꾼":"활","영혼인도자":"낫","진혼자":"낫","수확자":"낫","포수":"마도총","마탄사":"마도총","마도사수":"마도총","발키리":"마도총","각성 클레릭":"완드","클레릭":"완드","드루이드":"완드","각성 서머너":"완드","서머너":"완드","아크메이지":"완드","메이지":"완드","위자드":"완드","땅울림":"생활","상급 채집가":"생활","철의 명장":"생활"},wg=j=>JW[j]||"기타";
-const low=s=>String(s||"").toLowerCase(),ky=(n,lv)=>low(n)+"|"+lv;
-const CR=(()=>{const m=new Map();
-D.forEach(x=>m.set(ky(x.n,x.lv),{n:x.n,lv:x.lv,j:x.j,g:x.g,f:x.f,o:x.r,wr:[],life:[]}));
-for(const w in W)W[w].forEach(x=>{let e=m.get(ky(x.n,x.lv));if(!e){e={n:x.n,lv:x.lv,j:x.j,g:x.g,f:x.f,o:0,wr:[],life:[]};m.set(ky(x.n,x.lv),e)}if(!e.wr.length)e.j=x.j;e.wr.push({w,r:x.r})});
-const a=[...m.values()].sort((p,q)=>q.lv-p.lv||(p.o||999)-(q.o||999)||q.f-p.f);a.forEach((x,i)=>{x.cr=i+1;x.w=x.wr.length?x.wr[0].w:wg(x.j)});return a})();
-const ACC=CR.slice();
-LIFE.forEach(l=>l.rows.forEach((x,i)=>{if(!x.n)return;const lv=l.kind=="life"?x.ul:x.lv;
-let a=ACC.find(c=>low(c.n)==low(x.n)&&c.lv==lv);
-if(!a){const same=ACC.filter(c=>low(c.n)==low(x.n));if(same.length==1&&Math.abs(same[0].lv-lv)<=1)a=same[0]}
-if(!a){a={n:x.n,lv,j:x.j,g:x.g,f:null,o:0,wr:[],life:[],cr:0,w:wg(x.j),lifeOnly:true};ACC.push(a)}
-a.life.push({name:l.name,rank:i+1,lv:l.kind=="life"?x.ll:x.lv})}));
-const dupCnt=n=>ACC.filter(c=>low(c.n)==low(n)).length;
-
-/* ---------- 서버 통계 ---------- */
+const LIFE=LN.filter(([k])=>DL.tabs[k]&&DL.tabs[k].length).map(([k,name,kind])=>({name,kind,cnt:DL.counts[name]||"-",rows:DL.tabs[k].map(x=>kind=="life"?{ll:x[0],n:x[1],ul:x[2],j:x[3],g:x[4]}:{lv:x[0],n:x[1],j:x[2],g:x[3],f:x[4]})}));
+const TREE={한손검:["검사","검호","검성","검제","팔라딘","각성 팔라딘"],단검:["도적","암살자","처형자","월영의 그림자","각성 월영의 그림자"],대검:["기사","정식기사","근위대장","바바리안","수호자"],창:["창술사","창성","천창","백야기사"],활:["사냥꾼","추적자","명궁","신궁","비스트테이머","공허추적자"],완드:["마법사","위자드","메이지","현자","클레릭","각성 클레릭","서머너","각성 서머너","드루이드","아크메이지"],낫:["수확자","진혼자","영혼인도자"],건틀릿:["권사","권성","권왕","수도승"],마도총:["마도사수","마탄사","발키리","포수"],생활:["초급 광부","중급 광부","상급 광부","땅울림","초급 낚시꾼","중급 낚시꾼","상급 낚시꾼","파도잡이","초급 대장장이","중급 대장장이","상급 대장장이","철의 명장","초급 연금사","중급 연금사","상급 연금사","초급 채집가","중급 채집가","상급 채집가","초급 요리사","중급 요리사"]};
+const JW={};for(const g in TREE)TREE[g].forEach(j=>JW[j]=g);const wg=j=>JW[j]||"기타";
+const CR=(()=>{const m=new Map();D.forEach(x=>m.set(x.n,{n:x.n,lv:x.lv,j:x.j,g:x.g,f:x.f,o:x.r,t:0}));for(const w in W)W[w].forEach(x=>{const e=m.get(x.n);if(e){if(!e.t){e.t=1;e.j=x.j}}else m.set(x.n,{n:x.n,lv:x.lv,j:x.j,g:x.g,f:x.f,o:0,t:1})});const a=[...m.values()].sort((p,q)=>q.lv-p.lv||(p.o||999)-(q.o||999)||q.f-p.f);a.forEach((x,i)=>{x.cr=i+1;x.w=wg(x.j)});return a})();
+let FB=0;Object.values(NM).forEach(k=>{if(!(WC[k]>0)){WC[k]=CR.filter(x=>x.w==k).length;FB=1}});WS.forEach(w=>{w[1]=WC[w[0]]});
 const jobs=cnt(CR,x=>x.j),top=jobs.slice(0,9),oth=jobs.slice(9).reduce((s,j)=>s+j[1],0);
-$("#kp").innerHTML=[["집계 인원",CR.length+"명"],["평균 레벨","Lv."+Math.round(avg(CR.map(x=>x.lv)))],["최고 레벨",CR[0].lv],["6층 도달",CR.filter(x=>x.f==6).length+"명"],["직업 종류",jobs.length+"종"]].map(k=>`<div class="k"><span class="mu">${k[0]}</span><b>${k[1]}</b></div>`).join("");
-const JI=oth?top.concat([["기타",oth]]):top;pie("#jp",JI);
-$("#jp").querySelectorAll(".lg div").forEach((d,i)=>{if(!JI[i]||JI[i][0]=="기타")return;d.style.cursor="pointer";d.title="클릭하면 아래 직업별 랭킹이 이 직업으로 바뀝니다";d.onclick=()=>{JF=JI[i][0];GK=wg(JF);t15();$("#tt15").scrollIntoView({behavior:"smooth"})}});
-
-/* 무기 분포: 공식 인원을 못 읽었으면 수집된 랭킹 기준으로 대신 집계 */
-const WDIST=(HAS_OFF?WN.filter(k=>WC[k]!=null).map(k=>[k,WC[k]]):WN.map(k=>[k,CR.filter(x=>x.w==k).length])).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
-pie("#wp",WDIST,HAS_OFF?WD:null);
-$("#wpn").textContent=HAS_OFF?"▲ 상승 · ▼ 하락은 1시간 전 대비 증감이에요. 기록이 2회 이상 쌓이면 표시돼요.":"공식 페이지의 무기별 인원을 읽지 못해, 수집된 랭킹(전체+무기별)에 포함된 인원 기준으로 집계했어요.";
+const L=avg(CR.map(x=>x.lv));
+$("#kp").innerHTML=[["집계 인원",CR.length+"명"],["평균 레벨","Lv."+Math.round(L)],["최고 레벨",CR[0].lv],["6층 도달",CR.filter(x=>x.f==6).length+"명"],["직업 종류",jobs.length+"종"]].map(k=>`<div class="k"><span class="mu">${k[0]}</span><b>${k[1]}</b></div>`).join("");
+const JI=oth?top.concat([["기타",oth]]):top;pie("#jp",JI);$("#jp").querySelectorAll(".lg div").forEach((d,i)=>{d.title="클릭하면 TOP 15이 이 직업으로 바뀝니다";d.onclick=()=>{if(JI[i][0]!="기타"){JF=JI[i][0];GK=wg(JF);t15();$("#tt15").scrollIntoView({behavior:"smooth"})}}});
+pie("#wp",Object.keys(WC).map(k=>[k,WC[k]]).filter(x=>x[1]>0),WD);$("#wn").textContent=FB?"공식 등록 수를 읽지 못해 수집된 플레이어 기준으로 표시 중 · ":"";
 const bk={};CR.forEach(x=>{const k=Math.floor(x.lv/5)*5;bk[k]=(bk[k]||0)+1});const mx=Math.max(...Object.values(bk));
 $("#ld").innerHTML=Object.keys(bk).sort((a,b)=>b-a).map(k=>`<div class="bar"><b style="width:70px">${k}~${+k+4}</b><span style="width:${bk[k]/mx*60}%"></span>${bk[k]}명</div>`).join("");
-
-/* ---------- 검색 / 계정 선택 ---------- */
-let SG=[],SI=-1,LIST=[];
-const lab=a=>`${esc(a.j||"-")} · Lv.${a.lv}`;
-function suggest(q){q=low(q.trim());if(!q)return[];const ex=[],pf=[],ct=[];ACC.forEach(a=>{const n=low(a.n);if(n==q)ex.push(a);else if(n.startsWith(q))pf.push(a);else if(n.includes(q))ct.push(a)});const s=(x,y)=>y.lv-x.lv;return[...ex.sort(s),...pf.sort(s),...ct.sort(s)]}
-function drop(){const q=$("#q").value;SG=suggest(q).slice(0,8);SI=-1;const el=$("#sgl");
-if(!SG.length){el.hidden=true;$("#q").setAttribute("aria-expanded","false");return}
-el.innerHTML=SG.map((a,i)=>`<button type="button" class="sg" role="option" data-i="${i}"><b>${esc(a.n)}</b><small>${lab(a)}</small></button>`).join("");el.hidden=false;$("#q").setAttribute("aria-expanded","true")}
-const closeDrop=()=>{$("#sgl").hidden=true;$("#q").setAttribute("aria-expanded","false")};
-function hi(){document.querySelectorAll("#sgl .sg").forEach((b,i)=>{b.classList.toggle("on",i==SI);if(i==SI)b.scrollIntoView({block:"nearest"})})}
-function chooser(list,msg){LIST=list;closeDrop();$("#me").className="";$("#me").innerHTML=`<div class="pick"><div class="pick-t">${msg}</div><div class="pick-l">${list.map((a,i)=>`<button type="button" class="pk" data-i="${i}"><b>${esc(a.n)}</b><small>${lab(a)}${a.g?" · 길드 "+esc(a.g):""}</small></button>`).join("")}</div></div>`}
-function find(){const v=low($("#q").value.trim());closeDrop();if(!v)return;
-const ex=ACC.filter(a=>low(a.n)==v);
-if(ex.length==1)return show(ex[0]);
-if(ex.length>1)return chooser(ex.sort((a,b)=>b.lv-a.lv),`<b>${esc(ex[0].n)}</b> 닉네임의 계정이 ${ex.length}개 있어요. 보고 싶은 계정을 선택하세요.`);
-const sg=suggest(v).slice(0,12);
-if(sg.length)return chooser(sg,`'${esc($("#q").value.trim())}' 와(과) 정확히 일치하는 닉네임은 없어요. 혹시 이 중에 있나요?`);
-$("#me").className="mu";$("#me").innerHTML="집계된 랭킹 목록에서 찾을 수 없는 닉네임입니다."}
-
-function show(a){closeDrop();$("#q").value=a.n;const t=[],me=$("#me");me.className="";
-let G="",gb="";
-if(!a.lifeOnly){const rk=a.o||a.cr,pr=rk/CR.length*100,pc=Math.max(1,Math.round(pr));G=grade(rk,pr);gb=`<span class="gr g${G}">${G}</span>`;
-const sj=CR.filter(x=>x.j==a.j),ja=Math.round(avg(sj.map(x=>x.lv))),df=a.lv-ja;
-t.push(["전체 순위",rk+"위",`상위 ${pc}%`],["레벨","Lv."+a.lv,`직업 평균 ${ja} (${df>=0?"+":""}${df})`],["도달 층",a.f+"층",""],["직업 내 순위",sj.indexOf(a)+1+"위",`${esc(a.j)} ${sj.length}명 중`],["동레벨 인원",CR.filter(x=>x.lv==a.lv).length+"명","Lv."+a.lv])}
-else t.push(["레벨","Lv."+a.lv,"생활 랭킹에서 확인된 정보"]);
-const pills=[];
-a.wr.forEach(w=>pills.push(`${esc(w.w)} <b>${w.r}위</b>${WC[w.w]!=null?" / "+WC[w.w]+"명":""}`));
-a.life.forEach(l=>pills.push(`${esc(l.name)} <b>${l.rank}위</b> · Lv.${l.lv}`));
-let tr="";
-if(!a.lifeOnly){if(dupCnt(a.n)>1)tr=`<div class="mu">같은 닉네임의 계정이 여러 개라 변화 추이는 표시하지 않아요. (기록이 닉네임 기준으로 저장돼요)</div>`;
-else tr=trend(a.n).map(x=>`<div class="tr"><span>${x[0]}</span><span>${x[1]}</span></div>`).join("")+spark(a.n)}
-me.innerHTML=`<div class="pf-head"><div class="av"><img alt="" data-n="${esc(a.n)}" src="https://mineskin.eu/headhelm/${encodeURIComponent(a.n)}/100.png"></div>
-<div class="pf-name"><b>${esc(a.n)}</b><div class="tags">${gb}<span class="tag">${esc(a.j||"-")}</span>${a.w&&a.w!="기타"?`<span class="tag">${esc(a.w)}</span>`:""}${a.g?`<span class="tag">길드 ${esc(a.g)}</span>`:""}</div></div></div>
-<div class="grid pf-sec">${t.map(k=>`<div class="k"><span class="mu">${k[0]}</span><b>${k[1]}</b>${k[2]?`<span class="pc">${k[2]}</span>`:""}</div>`).join("")}</div>
-${pills.length?`<div class="pf-sec"><div class="mu">무기·생활 랭킹</div><div class="pills">${pills.map(p=>`<span class="pill">${p}</span>`).join("")}</div></div>`:""}
-${tr?`<details class="dt"><summary>변화 추이 보기</summary><div class="in">${tr}</div></details>`:""}
-<details class="dt"><summary>등급 기준 · 안내</summary><div class="in mu">등급: SS 1~3위 · S 4~50위 · A 51~100위 · B 상위 30% 이내 · C 50% 이내 · D 70% 이내 · F 그 아래<br>공격력·마력·방어력·플레이타임은 공식 페이지에 공개되지 않아 표시할 수 없습니다. 모든 순위는 수집된 전체·무기별·생활 랭킹 기준입니다.</div></details>`}
-
-/* 이벤트 */
-$("#q").addEventListener("input",drop);$("#q").addEventListener("focus",drop);
-$("#q").addEventListener("keydown",e=>{if(e.key=="ArrowDown"&&SG.length){e.preventDefault();SI=(SI+1)%SG.length;hi()}else if(e.key=="ArrowUp"&&SG.length){e.preventDefault();SI=(SI-1+SG.length)%SG.length;hi()}else if(e.key=="Escape")closeDrop();else if(e.key=="Enter"){e.preventDefault();if(SI>=0&&SG[SI])show(SG[SI]);else find()}});
-$("#go").onclick=find;
-document.addEventListener("click",e=>{
-const sg=e.target.closest(".sg");if(sg){show(SG[+sg.dataset.i]);return}
-const pk=e.target.closest(".pk");if(pk){show(LIST[+pk.dataset.i]);return}
-const more=e.target.closest(".more");if(more){const x=more.parentNode,o=x.classList.toggle("open");more.textContent=o?"▲ 접기":`▼ 나머지 ${more.dataset.ex}명 펼쳐 보기`;return}
-const n=e.target.closest("a.nk");if(n){const lv=n.dataset.lv===""?null:+n.dataset.lv,nm=low(n.dataset.n);const c=ACC.filter(a=>low(a.n)==nm);const a=c.find(a=>a.lv==lv)||c[0];if(a){show(a);$("#srch").scrollIntoView({behavior:"smooth"})}return}
-if(!e.target.closest(".sb"))closeDrop()});
-document.addEventListener("error",e=>{const im=e.target;if(!im||im.tagName!=="IMG"||!im.dataset.n)return;if(!im.dataset.t){im.dataset.t=1;im.src="https://minotar.net/helm/"+encodeURIComponent(im.dataset.n)+"/100.png"}else{const s=document.createElement("span");s.textContent=(im.dataset.n.replace(/_/g,"")[0]||"?").toUpperCase();im.replaceWith(s)}},true);
-
-/* ---------- 레벨별 조회 ---------- */
-function lvl(){const n=+$("#lv").value,u=CR.filter(x=>x.lv==n);
-$("#lr").innerHTML=u.length?`<div class="mu" style="margin-bottom:6px">${n}레벨 ${u.length}명 · 평균 도달 층 ${avg(u.map(x=>x.f)).toFixed(1)}층 · 수집된 전체·무기별 랭킹 기준</div>`+tbl(["순위","닉네임","직업","무기","길드","층"],u.map(x=>`<tr><td>${x.o||x.cr}</td><td>${nk(x.n,x.lv)}</td><td>${esc(x.j)}</td><td>${esc(x.w)}</td><td>${esc(x.g)}</td><td>${x.f}</td></tr>`)):`<div class="mu">${n}레벨 플레이어가 집계된 목록에 없습니다. (집계 범위 Lv.${CR[CR.length-1].lv}~${CR[0].lv})</div>`}
+$("#nl").innerHTML=[...new Set(CR.map(x=>x.n).concat(...LIFE.map(l=>l.rows.map(x=>x.n).filter(Boolean))))].map(n=>`<option value="${n}">`).join("");
+function find(){const v=$("#q").value.trim().toLowerCase(),u=CR.find(x=>x.n.toLowerCase()==v),ws=[],ls=[];
+for(const k in W){const i=W[k].findIndex(x=>x.n.toLowerCase()==v);if(i>=0)ws.push([k,i+1])}
+LIFE.forEach(l=>{const i=l.rows.findIndex(x=>x.n.toLowerCase()==v);if(i>=0)ls.push([l.name,i+1,l.rows[i]])});
+const b=u||(ls[0]&&ls[0][2]);
+if(!b){$("#me").innerHTML="집계된 랭킹 목록에서 찾을 수 없는 닉네임입니다.";return}
+const t=[];
+if(u){const rk=u.o||u.cr,pr=rk/CR.length*100,pc=Math.max(1,Math.round(pr)),G=grade(rk,pr),gb=`<span class="gr g${G}">${G}</span>`,sj=CR.filter(x=>x.j==u.j),ja=Math.round(avg(sj.map(x=>x.lv)));
+t.push(["전체 순위",rk+"위"+gb+`<small class="pc">상위 ${pc}%</small>`],["레벨","Lv."+u.lv],["도달 층",u.f+"층"],["무기 계열",u.w],["직업 내 순위",sj.indexOf(u)+1+" / "+sj.length],["동레벨 인원",CR.filter(x=>x.lv==u.lv).length+"명"],["직업 평균 레벨",ja+" ("+(u.lv-ja>=0?"+":"")+(u.lv-ja)+")"])}
+ws.forEach(w=>t.push([w[0]+" 랭킹",w[1]+"위 / "+WC[w[0]]]));
+ls.forEach(l=>t.push([l[0]+" 랭킹",l[1]+"위 · Lv."+(l[2].ll||l[2].lv)]));
+if(u&&typeof trend=="function")trend(u.n).forEach(x=>t.push(x));
+$("#me").innerHTML=`<div class="row" style="gap:14px"><div class="av"><img alt="" src="https://mineskin.eu/headhelm/${encodeURIComponent(b.n)}/100.png"></div><div><b style="font-size:22px">${b.n}</b><div class="mu">${b.j} · 길드 ${b.g}</div></div></div><div class="grid" style="margin-top:12px">${t.map(k=>`<div class="k"><span class="mu">${k[0]}</span><b>${k[1]}</b></div>`).join("")}</div>${u&&typeof spark=="function"?spark(u.n):""}<div class="mu" style="margin-top:8px">공격력·마력·방어력·플레이타임은 공식 페이지에 공개되지 않아 표시할 수 없습니다. 모든 순위는 수집된 전체·무기별·생활 랭킹 기준입니다.<br>등급: SS 1~3위 · S 4~50위 · A 51~100위 · B 상위 30% 이내 · C 50% 이내 · D 70% 이내 · F 그 아래</div>`;
+const im=$("#me img");if(im)im.onerror=()=>{if(!im.dataset.t){im.dataset.t=1;im.src="https://minotar.net/helm/"+encodeURIComponent(b.n)+"/100.png"}else im.parentNode.textContent=b.n.replace(/_/g,"")[0]||"?"}}
+$("#go").onclick=find;$("#q").onkeydown=e=>{if(e.key=="Enter")find()};
+function lvl(){const n=+$("#lv").value,u=CR.filter(x=>x.lv==n);$("#lr").innerHTML=u.length?`<div class="mu">${n}레벨 ${u.length}명 · 평균 도달 층 ${avg(u.map(x=>x.f)).toFixed(1)}층 · 수집된 전체·무기별 랭킹 기준</div><div class="tw"><table><tr><th>순위</th><th>닉네임</th><th>직업</th><th>무기</th><th>길드</th><th>층</th></tr>${u.map(x=>`<tr><td>${x.o||x.cr}</td><td>${x.n}</td><td>${x.j}</td><td>${x.w}</td><td>${x.g}</td><td>${x.f}</td></tr>`).join("")}</table></div>`:`<div class="mu">${n}레벨 플레이어가 집계된 목록에 없습니다. (집계 범위 Lv.${CR[CR.length-1].lv}~${CR[0].lv})</div>`}
 document.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>{$("#lv").value=+$("#lv").value+ +b.dataset.d;lvl()});$("#lv").oninput=lvl;lvl();
 
-/* ---------- 무기 계열 요약 ---------- */
-{const keys=Object.keys(W),val=k=>WC[k]!=null?WC[k]:CR.filter(x=>x.w==k).length,tot=keys.reduce((s,k)=>s+val(k),0)||1;
-$("#wsn").textContent=HAS_OFF?"공식 집계":"수집 기준";
-$("#ws").innerHTML=tbl(["무기","인원","비중","1위 레벨","컷 레벨"],keys.map(k=>{const v=val(k),p=v/tot*100,w=W[k];return`<tr><td>${esc(k)}</td><td>${v}명</td><td><span class="mb"><i style="width:${p.toFixed(1)}%"></i></span>${p.toFixed(1)}%</td><td>Lv.${w[0].lv}</td><td>Lv.${w[w.length-1].lv} <span class="mu">(${w.length}위)</span></td></tr>`}),99)}
 
-/* ---------- 무기·직업별 랭킹 ---------- */
-function chips(el,list,cur,fn){$(el).innerHTML=list.map(x=>`<button class="chip${x[0]==cur?" on":""}" data-v="${esc(x[0])}">${esc(x[1])}</button>`).join("");$(el).querySelectorAll("button").forEach(b=>b.onclick=()=>fn(b.dataset.v))}
+$("#ws").innerHTML=`<tr><th>무기</th><th>등록 수</th><th>1위 레벨</th><th>컷 레벨</th></tr>`+WS.map(w=>`<tr><td>${w[0]}</td><td>${w[1]}</td><td>${w[2]}</td><td>${w[3]} (${w[4]})</td></tr>`).join("");
+
+
+function chips(el,list,cur,fn){$(el).innerHTML=list.map(x=>`<button class="chip${x[0]==cur?" on":""}" data-v="${x[0]}">${x[1]}</button>`).join("");$(el).querySelectorAll("button").forEach(b=>b.onclick=()=>fn(b.dataset.v))}
 const JOBS=cnt(CR,x=>x.j);
-function t15(){try{const GS=["한손검","대검","창","단검","활","완드","낫","건틀릿","마도총","생활","기타"].filter(g=>JOBS.some(j=>wg(j[0])==g));
-if(!GS.includes(GK))GK=GS[0];const js=JOBS.filter(j=>wg(j[0])==GK);if(JF&&wg(JF)!=GK)JF="";
-chips("#gf",GS.map(g=>[g,g+(WC[g]!=null?" ("+WC[g]+")":"")]),GK,v=>{GK=v;JF="";t15()});
-chips("#jf",[["","전체"]].concat(js.map(j=>[j[0],j[0]+" ("+j[1]+")"])),JF,v=>{JF=v;t15()});
-if(!JF){const a=W[GK]||CR.filter(x=>x.w==GK).slice(0,20);
-$("#tt15").innerHTML=tbl(["순위","레벨","닉네임","직업","길드","층"],a.map((x,i)=>`<tr><td>${i+1}</td><td>${x.lv}</td><td>${nk(x.n,x.lv)}</td><td>${esc(x.j)}</td><td>${esc(x.g)}</td><td>${x.f}</td></tr>`));
-$("#jn").textContent=GK+" 전체 · "+a.length+"명"+(WC[GK]!=null?" (공식 등록 "+WC[GK]+"명)":"")+" · 상위 10명만 보여주고 나머지는 펼쳐서 볼 수 있어요"}
+const SM={};
+function tbl(k,tid,mid,head,items,redo){const all=SM[k],n=items.length;$(tid).innerHTML=head+(n?(all?items:items.slice(0,10)).join(""):"<tr><td>집계된 플레이어가 없습니다.</td></tr>");
+$(mid).innerHTML=n>10?`<button class="chip" id="${k}b">${all?"접기":"더보기 (+"+(n-10)+"명)"}</button>`:"";const b=$("#"+k+"b");if(b)b.onclick=()=>{SM[k]=!SM[k];redo()}}
+const TH=a=>"<tr>"+a.map(h=>"<th>"+h+"</th>").join("")+"</tr>",TR=c=>"<tr><td>"+c.join("</td><td>")+"</td></tr>";
+function t15(){try{const GS=Object.keys(TREE).concat(JOBS.some(j=>wg(j[0])=="기타")?["기타"]:[]);
+if(!GS.includes(GK))GK=GS[0];const cn=Object.fromEntries(JOBS.map(j=>[j[0],j[1]])),js=(TREE[GK]||JOBS.filter(j=>wg(j[0])==GK).map(j=>j[0])).map(n=>[n,cn[n]||0]);if(JF&&wg(JF)!=GK)JF="";
+chips("#gf",GS.map(g=>[g,g+(WC[g]?" ("+WC[g]+")":"")]),GK,v=>{GK=v;JF="";SM.t=0;t15()});
+chips("#jf",[["","전체"]].concat(js.map(j=>[j[0],j[0]+" ("+j[1]+")"])),JF,v=>{JF=v;SM.t=0;t15()});
+if(!JF){const a=W[GK]||CR.filter(x=>x.w==GK);
+tbl("t","#tt15","#mm1",TH(["순위","레벨","닉네임","직업","길드","층"]),a.map((x,i)=>TR([i+1,x.lv,x.n,x.j,x.g,x.f])),t15);
+$("#jn").textContent=GK+" 전체 · "+a.length+"명"+(WC[GK]&&!FB?" (공식 등록 "+WC[GK]+"명)":"")}
 else{const all=CR.filter(x=>x.j==JF);
-$("#tt15").innerHTML=tbl(["직업 순위","레벨","닉네임","길드","층","전체 순위"],all.map((x,i)=>`<tr><td>${i+1}</td><td>${x.lv}</td><td>${nk(x.n,x.lv)}</td><td>${esc(x.g)}</td><td>${x.f}</td><td>${x.o||x.cr}</td></tr>`));
-$("#jn").textContent=GK+" › "+JF+" · 집계 "+all.length+"명"}}catch(e){$("#tt15").innerHTML='<div class="mu">오류: '+esc(e.message)+"</div>"}}
-
-/* ---------- 생활 랭킹 (TOP 10 + 펼치기) ---------- */
+tbl("t","#tt15","#mm1",TH(["직업 순위","레벨","닉네임","길드","층","전체 순위"]),all.map((x,i)=>TR([i+1,x.lv,x.n,x.g,x.f,x.o||x.cr])),t15);
+$("#jn").textContent=GK+" › "+JF+" · 집계 "+all.length+"명"}}catch(e){$("#tt15").innerHTML="<tr><td>오류: "+e.message+"</td></tr>"}}
 let LK=0;
-function lt(){try{if(!LIFE.length){$("#lt").innerHTML='<div class="mu">생활 랭킹 데이터가 아직 없습니다.</div>';return}
-chips("#lf",LIFE.map((l,i)=>[i,l.name+(l.cnt!=null?" ("+l.cnt+")":"")]),LK,v=>{LK=+v;lt()});const l=LIFE[LK];
-$("#lt").innerHTML=l.kind=="life"
-?tbl(["순위","생활 레벨","닉네임","유저 레벨","직업","길드"],l.rows.map((x,i)=>`<tr><td>${i+1}</td><td>${x.ll}</td><td>${nk(x.n,x.ul)}</td><td>${x.ul}</td><td>${esc(x.j)}</td><td>${esc(x.g)}</td></tr>`))
-:tbl(["순위","레벨","닉네임","직업","길드","층"],l.rows.map((x,i)=>`<tr><td>${i+1}</td><td>${x.lv}</td><td>${nk(x.n,x.lv)}</td><td>${esc(x.j)}</td><td>${esc(x.g)}</td><td>${x.f}</td></tr>`))}catch(e){$("#lt").innerHTML='<div class="mu">오류: '+esc(e.message)+"</div>"}}
-t15();lt();
+function lt(){try{if(!LIFE.length){$("#lt").innerHTML="<tr><td>생활 랭킹 데이터가 아직 없습니다.</td></tr>";return}
+chips("#lf",LIFE.map((l,i)=>[i,l.name+" ("+l.cnt+")"]),LK,v=>{LK=+v;SM.l=0;lt()});const l=LIFE[LK];
+if(l.kind=="life")tbl("l","#lt","#mm2",TH(["순위","생활 레벨","닉네임","유저 레벨","직업","길드"]),l.rows.map((x,i)=>TR([i+1,x.ll,x.n||"비공개",x.ul,x.j,x.g])),lt);
+else tbl("l","#lt","#mm2",TH(["순위","레벨","닉네임","직업","길드","층"]),l.rows.map((x,i)=>TR([i+1,x.lv,x.n,x.j,x.g,x.f])),lt)}catch(e){$("#lt").innerHTML="<tr><td>오류: "+e.message+"</td></tr>"}}
+function tg(){$("#top15").innerHTML=CR.slice(0,15).map(x=>`<button class="tc" data-n="${x.n}"><b class="rk">${x.o||x.cr}</b><img alt="" src="https://mineskin.eu/headhelm/${encodeURIComponent(x.n)}/100.png"><span class="ti"><b>${x.n}</b><span>${x.j}</span><span class="mu">${x.w}</span></span></button>`).join("");
+document.querySelectorAll("#top15 [data-n]").forEach(b=>{b.onclick=()=>{$("#q").value=b.dataset.n;find();$("#q").scrollIntoView({behavior:"smooth",block:"center"})};const im=b.querySelector("img");im.onerror=()=>{if(!im.dataset.t){im.dataset.t=1;im.src="https://minotar.net/helm/"+encodeURIComponent(b.dataset.n)+"/100.png"}else im.style.visibility="hidden"}})}
+function calc(){const g=i=>Math.max(0,+$("#"+i).value||0),L2=g("sl")||1,S=g("s1"),X=g("s2"),C=g("s3"),I=g("s4"),ex=Math.max(0,X-500);
+const o=[["남은 스탯 포인트",(L2-1)*5-(S+X+C+I)],["물리 공격력",(1+S+X*0.5).toFixed(1)],["마법 공격력",(1+I).toFixed(1)],["최대 체력",20+L2*20+C*10],["최대 MP",50+L2*10+I*10],["근거리 무기 배율","×"+(1+S*0.002).toFixed(3)],["원거리 무기 배율","×"+(1+X*0.0015).toFixed(3)],["단검 배율","×"+(1+(S+X)*0.0015).toFixed(3)],["마법 무기 배율","×"+(1+I*0.002).toFixed(3)],["치명타 확률",Math.min(50,X*0.1).toFixed(1)+"%"],["치명타 피해","×"+(1.5+S*0.0015+ex*0.001).toFixed(2)],["HP 재생(10초)",10+C],["넉백 저항",Math.min(80,C*0.1).toFixed(1)+"%"],["스킬 쿨감",Math.min(50,I*0.05).toFixed(1)+"%"]];
+$("#so").innerHTML=o.map(k=>`<div class="k"><span class="mu">${k[0]}</span><b>${k[1]}</b></div>`).join("")}
+document.querySelectorAll("#sc input").forEach(i=>i.oninput=calc);calc();
+t15();lt();tg();
 }
 boot().then(function(){document.getElementById("st").textContent="";}).catch(e=>document.body.insertAdjacentHTML("afterbegin","<div style='background:#c33;color:#fff;padding:8px'>데이터를 불러오지 못했습니다: "+e.message+" (Actions를 한 번 실행했는지 확인하세요)</div>"));
 })();
