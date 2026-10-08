@@ -44,7 +44,7 @@ em.up,em.dn,em.eq{font-style:normal;font-weight:700;margin-left:4px;white-space:
 @media(max-width:640px){.t15g{grid-template-columns:1fr;grid-template-rows:none;grid-auto-flow:row}}
 .tc{display:flex;align-items:center;gap:10px;text-align:left;padding:10px;border-radius:10px;width:100%}.tc .rk{font-size:20px;min-width:34px;text-align:center;font-weight:900}
 .tc img{width:48px;height:48px;image-rendering:pixelated;border-radius:6px;background:var(--bd);flex:none}.tc .ti{display:flex;flex-direction:column;line-height:1.35;min-width:0}.tc .ti b{font-size:16px;overflow:hidden;text-overflow:ellipsis}
-#sc input{width:96px}</style></head><body><main>
+#sc input{width:96px}.av{border-radius:50%}.av img{border-radius:50%;object-fit:cover}.tc img{border-radius:50%;object-fit:cover}</style></head><body><main>
 <h1>세레스 온라인 랭킹 대시보드</h1>
 <div id="st" class="mu">⏳ 스크립트 실행 확인 중… (이 문구가 계속 보이면 알려주세요)</div>
 <div class="mu"><span id="asof">불러오는 중…</span> · 공식 페이지가 공개하는 값(레벨·직업·길드·도달 층)만 사용합니다.</div>
@@ -117,19 +117,19 @@ const JI=oth?top.concat([["기타",oth]]):top;pie("#jp",JI);$("#jp").querySelect
 pie("#wp",Object.keys(WC).map(k=>[k,WC[k]]).filter(x=>x[1]>0),WD);$("#wn").textContent=FB?"공식 등록 수를 읽지 못해 수집된 플레이어 기준으로 표시 중 · ":"";
 const bk={};CR.forEach(x=>{const k=Math.floor(x.lv/5)*5;bk[k]=(bk[k]||0)+1});const mx=Math.max(...Object.values(bk));
 $("#ld").innerHTML=Object.keys(bk).sort((a,b)=>b-a).map(k=>`<div class="bar"><b style="width:70px">${k}~${+k+4}</b><span style="width:${bk[k]/mx*60}%"></span>${bk[k]}명</div>`).join("");
-$("#nl").innerHTML=[...new Set(CR.map(x=>x.n).concat(...LIFE.map(l=>l.rows.map(x=>x.n).filter(Boolean))))].map(n=>`<option value="${n}">`).join("");
-function find(){const v=$("#q").value.trim().toLowerCase(),u=CR.find(x=>x.n.toLowerCase()==v),ws=[],ls=[];
+$("#nl").innerHTML=[...new Set(CR.map(x=>x.n))].map(n=>`<option value="${n}">`).join("");
+function find(){const v=$("#q").value.trim().toLowerCase(),u=CR.find(x=>x.n.toLowerCase()==v),ws=[];
 for(const k in W){const i=W[k].findIndex(x=>x.n.toLowerCase()==v);if(i>=0)ws.push([k,i+1])}
-LIFE.forEach(l=>{const i=l.rows.findIndex(x=>x.n.toLowerCase()==v);if(i>=0)ls.push([l.name,i+1,l.rows[i]])});
-const b=u||(ls[0]&&ls[0][2]);
-if(!b){$("#me").innerHTML="집계된 랭킹 목록에서 찾을 수 없는 닉네임입니다.";return}
+const b=u;
+if(!b){$("#me").innerHTML="전체·무기별 전투 랭킹에서 찾을 수 없는 닉네임입니다.";return}
 const t=[];
 if(u){const rk=u.o||u.cr,pr=rk/CR.length*100,pc=Math.max(1,Math.round(pr)),G=grade(rk,pr),gb=`<span class="gr g${G}">${G}</span>`,sj=CR.filter(x=>x.j==u.j),ja=Math.round(avg(sj.map(x=>x.lv)));
-t.push(["전체 순위",rk+"위"+gb+`<small class="pc">상위 ${pc}%</small>`],["레벨","Lv."+u.lv],["도달 층",u.f+"층"],["무기 계열",u.w],["직업 내 순위",sj.indexOf(u)+1+" / "+sj.length],["동레벨 인원",CR.filter(x=>x.lv==u.lv).length+"명"],["직업 평균 레벨",ja+" ("+(u.lv-ja>=0?"+":"")+(u.lv-ja)+")"])}
+t.push(["전체 순위",rk+"위"+gb+`<small class="pc">상위 ${pc}%</small>`],["레벨","Lv."+u.lv],["도달 층",u.f+"층"],...(u.w=="생활"||u.w=="기타"?[]:[["무기 계열",u.w]]),["직업 내 순위",sj.indexOf(u)+1+" / "+sj.length],["동레벨 인원",CR.filter(x=>x.lv==u.lv).length+"명"],["직업 평균 레벨",ja+" ("+(u.lv-ja>=0?"+":"")+(u.lv-ja)+")"])}
 ws.forEach(w=>t.push([w[0]+" 랭킹",w[1]+"위 / "+WC[w[0]]]));
-ls.forEach(l=>t.push([l[0]+" 랭킹",l[1]+"위 · Lv."+(l[2].ll||l[2].lv)]));
 if(u&&typeof trend=="function")trend(u.n).forEach(x=>t.push(x));
-$("#me").innerHTML=`<div class="row" style="gap:14px"><div class="av"><img alt="" src="https://mineskin.eu/headhelm/${encodeURIComponent(b.n)}/100.png"></div><div><b style="font-size:22px">${b.n}</b><div class="mu">${b.j} · 길드 ${b.g}</div></div></div><div class="grid" style="margin-top:12px">${t.map(k=>`<div class="k"><span class="mu">${k[0]}</span><b>${k[1]}</b></div>`).join("")}</div>${u&&typeof spark=="function"?spark(u.n):""}<div class="mu" style="margin-top:8px">공격력·마력·방어력·플레이타임은 공식 페이지에 공개되지 않아 표시할 수 없습니다. 모든 순위는 수집된 전체·무기별·생활 랭킹 기준입니다.<br>등급: SS 1~3위 · S 4~50위 · A 51~100위 · B 상위 30% 이내 · C 50% 이내 · D 70% 이내 · F 그 아래</div>`;
+if(u&&typeof growth=="function")growth(u.n).forEach(x=>t.push(x));
+$("#me").innerHTML=`<div class="row" style="gap:14px"><div class="av"><img alt="" src="https://mineskin.eu/headhelm/${encodeURIComponent(b.n)}/100.png"></div><div><b style="font-size:22px">${b.n}</b><div class="mu">${b.j} · 길드 ${b.g}</div></div></div><div class="grid" style="margin-top:12px">${t.map(k=>`<div class="k"><span class="mu">${k[0]}</span><b>${k[1]}</b></div>`).join("")}</div>${u&&typeof drawTr=="function"?'<div class="mu" style="margin-top:16px">변화 추이 기간</div><div class="row" id="pd"></div><div id="trc"></div>':""}<div class="mu" style="margin-top:8px">공격력·마력·방어력·플레이타임은 공식 페이지에 공개되지 않아 표시할 수 없습니다. 모든 순위는 수집된 전체·무기별 랭킹 기준입니다.<br>등급: SS 1~3위 · S 4~50위 · A 51~100위 · B 상위 30% 이내 · C 50% 이내 · D 70% 이내 · F 그 아래</div>`;
+if(u&&typeof drawTr=="function")drawTr(u.n);
 const im=$("#me img");if(im)im.onerror=()=>{if(!im.dataset.t){im.dataset.t=1;im.src="https://minotar.net/helm/"+encodeURIComponent(b.n)+"/100.png"}else im.parentNode.textContent=b.n.replace(/_/g,"")[0]||"?"}}
 $("#go").onclick=find;$("#q").onkeydown=e=>{if(e.key=="Enter")find()};
 function lvl(){const n=+$("#lv").value,u=CR.filter(x=>x.lv==n);$("#lr").innerHTML=u.length?`<div class="mu">${n}레벨 ${u.length}명 · 평균 도달 층 ${avg(u.map(x=>x.f)).toFixed(1)}층 · 수집된 전체·무기별 랭킹 기준</div><div class="tw"><table><tr><th>순위</th><th>닉네임</th><th>직업</th><th>무기</th><th>길드</th><th>층</th></tr>${u.map(x=>`<tr><td>${x.o||x.cr}</td><td>${x.n}</td><td>${x.j}</td><td>${x.w}</td><td>${x.g}</td><td>${x.f}</td></tr>`).join("")}</table></div>`:`<div class="mu">${n}레벨 플레이어가 집계된 목록에 없습니다. (집계 범위 Lv.${CR[CR.length-1].lv}~${CR[0].lv})</div>`}
@@ -166,6 +166,28 @@ function calc(){const g=i=>Math.max(0,+$("#"+i).value||0),L2=g("sl")||1,S=g("s1"
 const o=[["남은 스탯 포인트",(L2-1)*5-(S+X+C+I)],["물리 공격력",(1+S+X*0.5).toFixed(1)],["마법 공격력",(1+I).toFixed(1)],["최대 체력",20+L2*20+C*10],["최대 MP",50+L2*10+I*10],["근거리 무기 배율","×"+(1+S*0.002).toFixed(3)],["원거리 무기 배율","×"+(1+X*0.0015).toFixed(3)],["단검 배율","×"+(1+(S+X)*0.0015).toFixed(3)],["마법 무기 배율","×"+(1+I*0.002).toFixed(3)],["치명타 확률",Math.min(50,X*0.1).toFixed(1)+"%"],["치명타 피해","×"+(1.5+S*0.0015+ex*0.001).toFixed(2)],["HP 재생(10초)",10+C],["넉백 저항",Math.min(80,C*0.1).toFixed(1)+"%"],["스킬 쿨감",Math.min(50,I*0.05).toFixed(1)+"%"]];
 $("#so").innerHTML=o.map(k=>`<div class="k"><span class="mu">${k[0]}</span><b>${k[1]}</b></div>`).join("")}
 document.querySelectorAll("#sc input").forEach(i=>i.oninput=calc);calc();
+const lvAt=(x,n)=>x.ranks[n]?x.ranks[n][1]:(x.lv&&x.lv[n]!=null?x.lv[n]:null);
+function growth(n){const p=S.filter(x=>lvAt(x,n)!=null),wait=[["성장 속도","기록 쌓이는 중"]];
+if(p.length<2)return wait;const e=p[p.length-1],w=p.filter(x=>x.ts>=e.ts-604800),a=w[0],span=(e.ts-a.ts)/86400;if(span<0.25)return wait;
+const g=lvAt(e,n)-lvAt(a,n),sp=g/span,lb=span>=6.5?"최근 7일":span<1?"최근 "+Math.round(span*24)+"시간":"최근 "+span.toFixed(1)+"일",
+out=[["성장 속도 ("+lb+")",(sp>=0?"+":"")+sp.toFixed(2)+" Lv/일"+`<small class="pc">기간 내 ${g>=0?"+":""}${g}레벨</small>`]];
+const rk=w.filter(x=>x.ranks[n]).map(x=>x.ranks[n][0]);
+if(rk.length>=2)out.push(["순위 변동 ("+lb+")",dl(rk[0]-rk[rk.length-1])+`<small class="pc">최고 ${Math.min(...rk)}위 · 최저 ${Math.max(...rk)}위 · 폭 ${Math.max(...rk)-Math.min(...rk)}</small>`]);
+return out}
+let PD=0;
+const ch=(t,pts,inv)=>{const W0=640,H0=280,L=58,R=18,T=18,B=48,xs=pts.map(q=>q[0]),ys=pts.map(q=>q[1]),x0=Math.min(...xs),x1=Math.max(...xs),lo=Math.min(...ys),hi=Math.max(...ys),pad=lo==hi?1:Math.ceil((hi-lo)*.15),y0=Math.max(0,lo-pad),y1=hi+pad,
+X=v=>L+(x1==x0?.5:(v-x0)/(x1-x0))*(W0-L-R),Y=v=>{const f=(v-y0)/(y1-y0);return T+(inv?f:1-f)*(H0-T-B)},
+yt=[0,1,2,3,4].map(i=>Math.round(y0+(y1-y0)*i/4)),xt=[0,1,2,3,4].map(i=>x0+(x1-x0)*i/4),
+fd=s=>{const d=new Date(s*1000);return (d.getMonth()+1)+"/"+d.getDate()+" "+String(d.getHours()).padStart(2,"0")+"시"};
+return `<div style="margin-top:16px"><b style="font-size:17px">${t}</b><svg viewBox="0 0 ${W0} ${H0}" style="width:100%;max-width:760px;display:block">`
++yt.map(v=>`<line x1="${L}" x2="${W0-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--bd)"/><text x="${L-8}" y="${Y(v)+4}" text-anchor="end" font-size="13" fill="var(--mu)">${v}</text>`).join("")
++xt.map(v=>`<line x1="${X(v)}" x2="${X(v)}" y1="${T}" y2="${H0-B}" stroke="var(--bd)" stroke-dasharray="3 3"/><text x="${X(v)}" y="${H0-B+18}" text-anchor="middle" font-size="12" fill="var(--mu)">${fd(v)}</text>`).join("")
++`<polyline fill="none" stroke="var(--ac)" stroke-width="2.5" points="${pts.map(q=>X(q[0])+","+Y(q[1])).join(" ")}"/>`
++pts.map(q=>`<circle cx="${X(q[0])}" cy="${Y(q[1])}" r="3.5" fill="var(--ac)"><title>${fd(q[0])} · ${q[1]}</title></circle>`).join("")
++`<text x="${(L+W0-R)/2}" y="${H0-6}" text-anchor="middle" font-size="12" fill="var(--mu)">시간 (X)</text><text transform="rotate(-90 14 ${(T+H0-B)/2})" x="14" y="${(T+H0-B)/2}" text-anchor="middle" font-size="12" fill="var(--mu)">${inv?"순위 (Y · 위쪽이 높은 순위)":"레벨 (Y)"}</text></svg></div>`};
+function drawTr(n){chips("#pd",[[86400,"1일"],[604800,"1주"],[1209600,"2주"],[2592000,"1개월"],[0,"전체"]],PD,v=>{PD=+v;drawTr(n)});
+const now=S.length?S[S.length-1].ts:0,p=S.filter(x=>x.ranks[n]&&(!PD||x.ts>=now-PD));
+$("#trc").innerHTML=p.length<2?`<div class="mu" style="margin-top:8px">기록이 2회 이상 쌓이면 그래프가 나와요 (현재 ${p.length}회)</div>`:ch("랭킹 변화 추이",p.map(x=>[x.ts,x.ranks[n][0]]),1)+ch("레벨 변화 추이",p.map(x=>[x.ts,x.ranks[n][1]]),0)}
 t15();lt();tg();
 }
 boot().then(function(){document.getElementById("st").textContent="";}).catch(e=>document.body.insertAdjacentHTML("afterbegin","<div style='background:#c33;color:#fff;padding:8px'>데이터를 불러오지 못했습니다: "+e.message+" (Actions를 한 번 실행했는지 확인하세요)</div>"));
