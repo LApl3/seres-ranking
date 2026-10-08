@@ -2,6 +2,7 @@
 docs/data/latest.json  : 최신 전체+무기별 랭킹, 무기 등록 수
 docs/data/history.json : 매 수집 시각의 전체 랭킹(닉네임→[순위,레벨])과 무기 수 기록"""
 import json, os, re, time
+from urllib.parse import unquote
 import requests
 from bs4 import BeautifulSoup
 
@@ -26,20 +27,18 @@ def parse(html):
                 rows.append([int(c[1]), c[2], int(c[3] or 0), c[4], c[5]])
             else:      # 일반 탭: [레벨, 닉네임, 직업, 길드, 도달 층]
                 rows.append([int(c[1]), c[2], c[3], c[4], int(re.sub(r"\D", "", c[5]) or 0)])
-    text = soup.get_text(" ").replace("\xa0", " ")
-    NAMES = "한손검|대검|창|단검|활|완드|낫|건틀릿|마도총|채광|채집가|채집|낚시|제련|연금사|연금|요리사|요리|대장장이"
-    # 1) "한손검 (1,234)" / "한손검(1234명)" / "한손검（12）" 형태
-    counts = {w: int(n.replace(",", "")) for w, n in re.findall(
-        rf"({NAMES})\s*[\(\[（]\s*([\d,]+)\s*명?\s*[\)\]）]", text)}
-    # 2) 1번이 실패하면: 탭/버튼처럼 짧은 요소의 "한손검 1234" / "한손검 1,234명" 형태
-    if not counts:
-        for el in soup.find_all(["a", "button", "li", "span", "label", "option"]):
-            t = el.get_text(" ", strip=True).replace("\xa0", " ")
-            if len(t) > 24:
-                continue
-            mm = re.fullmatch(rf"({NAMES})\s*[:·\-]?\s*([\d,]+)\s*명?", t)
-            if mm:
-                counts[mm.group(1)] = int(mm.group(2).replace(",", ""))
+    text = soup.get_text(" ")
+    counts = {w: int(n) for w, n in re.findall(r"(한손검|대검|창|단검|활|완드|낫|건틀릿|마도총|채광|채집가|채집|낚시|제련|연금사|연금|요리사|요리|대장장이)\s*\((\d+)\)", text)}
+    names = {"wpn:sword": "한손검", "wpn:greatsword": "대검", "wpn:spear": "창", "wpn:dagger": "단검", "wpn:bow": "활",
+             "wpn:wand": "완드", "wpn:scythe": "낫", "wpn:knuckle": "건틀릿", "wpn:gun": "마도총",
+             "life:mining": "채광", "life:gathering": "채집", "life:fishing": "낚시", "life:smithing": "제련",
+             "life:alchemy": "연금", "life:cooking": "요리", "prof:blacksmith": "대장장이", "prof:gatherer": "채집가",
+             "prof:alchemist": "연금사", "prof:chef": "요리사"}
+    for a_ in soup.find_all(["a", "button"]):       # 탭 버튼/링크 안의 숫자 = 등록 수
+        mm = re.search(r"job=([^&#]+)", unquote(a_.get("href", "") or ""))
+        n_ = re.search(r"\d[\d,]*", a_.get_text(" "))
+        if mm and mm.group(1) in names and n_:
+            counts[names[mm.group(1)]] = int(n_.group(0).replace(",", ""))
     m = re.search(r"(\d+월\s*\d+일\s*\d+:\d+)\s*기준", text)
     return rows, counts, m.group(1) if m else ""
 
@@ -58,8 +57,6 @@ def main():
         tabs[key] = rows
         if key == "all":
             counts, base = c, b
-            if not counts:
-                print("경고: 무기·생활 인원수를 읽지 못했습니다(대시보드는 수집된 랭킹 기준으로 대신 표시).")
         elif b != base:                      # 기준 시각이 다른 탭(오래된 사본)은 이전 데이터를 유지
             print(f"경고: {key} 기준 시각 불일치({b} != {base}) → 이전 데이터 유지")
             tabs[key] = prev.get(key, [])
