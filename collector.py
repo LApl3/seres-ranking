@@ -69,8 +69,16 @@ def main():
         print("새 갱신 없음:", base); return    # 사이트가 아직 갱신 전이면 중복 기록 방지
     ts = int(time.time())
     json.dump({"ts": ts, "base": base, "tabs": tabs, "counts": counts}, open(f"{OUT}/latest.json", "w", encoding="utf-8"), **J)
-    H["snaps"].append({"ts": ts, "base": base, "counts": counts,
-                       "ranks": {n: [i + 1, lv] for i, (lv, n, *_) in enumerate(tabs["all"])}})
+    ranks = {n: [i + 1, lv] for i, (lv, n, *_) in enumerate(tabs["all"])}
+    snap = {"ts": ts, "base": base, "counts": counts, "ranks": ranks}
+    if len(H["snaps"]) % 6 == 0:   # 6시간마다: 전체 랭킹 밖 무기 랭킹 플레이어의 레벨도 기록(성장 속도용)
+        ex = {}
+        for k in ("sword", "greatsword", "spear", "dagger", "bow", "wand", "scythe", "knuckle", "gun"):
+            for lv, n, *_ in tabs.get(k, []):
+                if n not in ranks:
+                    ex[n] = lv
+        snap["lv"] = ex
+    H["snaps"].append(snap)
     H["snaps"] = H["snaps"][-1100:]           # 약 45일치
     json.dump(H, open(hp, "w", encoding="utf-8"), **J)
     build_standalone(json.load(open(f"{OUT}/latest.json", encoding="utf-8")), H)
