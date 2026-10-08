@@ -44,10 +44,10 @@ em.up,em.dn,em.eq{font-style:normal;font-weight:700;margin-left:4px;white-space:
 @media(max-width:640px){.t15g{grid-template-columns:1fr;grid-template-rows:none;grid-auto-flow:row}}
 .tc{display:flex;align-items:center;gap:10px;text-align:left;padding:10px;border-radius:10px;width:100%}.tc .rk{font-size:20px;min-width:34px;text-align:center;font-weight:900}
 .tc img{width:48px;height:48px;image-rendering:pixelated;border-radius:6px;background:var(--bd);flex:none}.tc .ti{display:flex;flex-direction:column;line-height:1.35;min-width:0}.tc .ti b{font-size:16px;overflow:hidden;text-overflow:ellipsis}
-#sc input{width:96px}.av{border-radius:50%}.av img{border-radius:50%;object-fit:cover}.tc img{border-radius:50%;object-fit:cover}.rv{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}.rv.in{opacity:1;transform:none}
+#sc input{width:96px}.av{border-radius:50%}.av img{border-radius:50%;object-fit:cover}.tc img{border-radius:50%;object-fit:cover}.rv{opacity:0;transform:translateY(42px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}.rv.in{opacity:1;transform:none}
 @keyframes pop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 #me .grid .k,.t15g .tc{animation:pop .45s ease both}#me .grid .k:nth-child(2n){animation-delay:.05s}#me .grid .k:nth-child(3n){animation-delay:.1s}
-@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}#me .grid .k,.t15g .tc{animation:none}}</style></head><body><main>
+@media (prefers-reduced-motion:reduce){.rv{transform:none;transition:opacity .5s ease}#me .grid .k,.t15g .tc{animation:none}}</style></head><body><main>
 <h1>세레스 온라인 랭킹 대시보드</h1>
 <div id="st" class="mu">⏳ 스크립트 실행 확인 중… (이 문구가 계속 보이면 알려주세요)</div>
 <div class="mu"><span id="asof">불러오는 중…</span> · 공식 페이지가 공개하는 값(레벨·직업·길드·도달 층)만 사용합니다.</div>
@@ -195,8 +195,9 @@ function drawTr(n){chips("#pd",[[86400,"1일"],[604800,"1주"],[1209600,"2주"],
 const now=S.length?S[S.length-1].ts:0,p=S.filter(x=>x.ranks[n]&&(!PD||x.ts>=now-PD));
 $("#trc").innerHTML=p.length<2?`<div class="mu" style="margin-top:8px">기록이 2회 이상 쌓이면 그래프가 나와요 (현재 ${p.length}회)</div>`:ch("랭킹 변화 추이",p.map(x=>[x.ts,x.ranks[n][0]]),1)+ch("레벨 변화 추이",p.map(x=>[x.ts,x.ranks[n][1]]),0)}
 t15();lt();tg();
-(function(){if(!("IntersectionObserver" in window))return;const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:.06});
-document.querySelectorAll(".cd").forEach(c=>{c.classList.add("rv");io.observe(c)})})();
+(function(){const cs=[...document.querySelectorAll(".cd")];cs.forEach((c,i)=>{c.classList.add("rv");c.style.transitionDelay=(i<4?i*90:0)+"ms"});
+let tk=0;const chk=()=>{tk=0;cs.forEach(c=>{if(!c.classList.contains("in")&&c.getBoundingClientRect().top<window.innerHeight*0.93){c.classList.add("in");setTimeout(()=>{c.style.transitionDelay=""},900)}})};
+const rq=()=>{if(!tk)tk=requestAnimationFrame(chk)};window.addEventListener("scroll",rq,{passive:true});window.addEventListener("resize",rq);setTimeout(chk,60)})();
 
 }
 boot().then(function(){document.getElementById("st").textContent="";}).catch(e=>document.body.insertAdjacentHTML("afterbegin","<div style='background:#c33;color:#fff;padding:8px'>데이터를 불러오지 못했습니다: "+e.message+" (Actions를 한 번 실행했는지 확인하세요)</div>"));
