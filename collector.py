@@ -65,8 +65,12 @@ def main():
         raise SystemExit("빈 응답")
     hp = f"{OUT}/history.json"
     H = json.load(open(hp, encoding="utf-8")) if os.path.exists(hp) else {"snaps": []}
-    if H["snaps"] and H["snaps"][-1].get("base") == base:
-        print("새 갱신 없음:", base); return    # 사이트가 아직 갱신 전이면 중복 기록 방지
+    # 사이트가 아직 갱신 전이면 중복 기록 방지. 기준 시각을 못 읽은 경우(base가 빈 값)에는
+    # 표 내용이 이전과 같은지로 판단해서, "영원히 새 갱신 없음"으로 멈추는 일이 없게 함
+    last = H["snaps"][-1] if H["snaps"] else None
+    same = bool(last) and ((base != "" and last.get("base") == base) or (base == "" and prev.get("all") == tabs["all"]))
+    if same:
+        print("새 갱신 없음:", base or "(기준 시각 미확인, 표 내용 동일)"); return
     ts = int(time.time())
     json.dump({"ts": ts, "base": base, "tabs": tabs, "counts": counts}, open(f"{OUT}/latest.json", "w", encoding="utf-8"), **J)
     ranks = {n: [i + 1, lv] for i, (lv, n, *_) in enumerate(tabs["all"])}
