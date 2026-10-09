@@ -3,6 +3,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%94%EF%B8%8F%3C/text%3E%3C/svg%3E">
 <title>세레스 온라인 랭킹 대시보드</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f4f5f7;--cd:#fff;--tx:#16181d;--mu:#555b66;--ac:#3b5b8c;--bd:#d3d8e0}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101216;--cd:#181b21;--tx:#eceef2;--mu:#a3a9b5;--ac:#7fa2d4;--bd:#2c313b}}
@@ -46,8 +47,12 @@ em.up,em.dn,em.eq{font-style:normal;font-weight:700;margin-left:4px;white-space:
 .tc img{width:48px;height:48px;image-rendering:pixelated;border-radius:6px;background:var(--bd);flex:none}.tc .ti{display:flex;flex-direction:column;line-height:1.35;min-width:0}.tc .ti b{font-size:16px;overflow:hidden;text-overflow:ellipsis}
 #sc input{width:96px}.av{border-radius:50%}.av img{border-radius:50%;object-fit:cover}.tc img{border-radius:50%;object-fit:cover}.rv{opacity:0;transform:translateY(42px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}.rv.in{opacity:1;transform:none}
 @keyframes pop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-#me .grid .k,.t15g .tc{animation:pop .45s ease both}#me .grid .k:nth-child(2n){animation-delay:.05s}#me .grid .k:nth-child(3n){animation-delay:.1s}
-@media (prefers-reduced-motion:reduce){.rv{transform:none;transition:opacity .5s ease}#me .grid .k,.t15g .tc{animation:none}}</style></head><body><main>
+#me .grid .k,.t15g .tc{animation:pop .45s ease backwards}#me .grid .k:nth-child(2n){animation-delay:.05s}#me .grid .k:nth-child(3n){animation-delay:.1s}
+@media (prefers-reduced-motion:reduce){.rv{transform:none;transition:opacity .5s ease}#me .grid .k,.t15g .tc{animation:none}}.k,.tc,.chip,.lg div{transition:transform .2s ease,box-shadow .2s ease,background-color .2s ease,border-color .2s ease}
+.k:hover,.tc:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.12)}.chip:hover{transform:translateY(-2px);box-shadow:0 3px 8px rgba(0,0,0,.12)}
+.chip.on{transform:translateY(-2px);box-shadow:0 4px 10px rgba(0,0,0,.18)}
+@keyframes fdn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}#gf .chip,#jf .chip,#lf .chip,#pd .chip{animation:fdn .3s ease-out backwards}
+@media (prefers-reduced-motion:reduce){.k:hover,.tc:hover,.chip:hover{transform:none}}</style></head><body><main>
 <h1>세레스 온라인 랭킹 대시보드</h1>
 <div id="st" class="mu">⏳ 스크립트 실행 확인 중… (이 문구가 계속 보이면 알려주세요)</div>
 <div class="mu"><span id="asof">불러오는 중…</span> · 공식 페이지가 공개하는 값(레벨·직업·길드·도달 층)만 사용합니다.</div>
@@ -82,6 +87,7 @@ em.up,em.dn,em.eq{font-style:normal;font-weight:700;margin-left:4px;white-space:
 
 <div class="mu" style="text-align:center;margin:24px 0 8px">비공식 팬 제작 대시보드 · 데이터 출처 <a href="https://seresonline.co.kr/ranking" target="_blank" rel="noopener" style="color:var(--ac)">seresonline.co.kr</a> · 매시간 자동 갱신</div>
 </main>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>window.addEventListener("error",function(e){var d=document.createElement("div");d.style.cssText="background:#c33;color:#fff;padding:8px;font-size:13px;position:relative;z-index:9";d.textContent="오류: "+e.message+(e.lineno?" (줄 "+e.lineno+")":"");document.body.insertBefore(d,document.body.firstChild)});</script>
 <script>
 (function(){let JF="",WK="한손검",GK="";
@@ -195,7 +201,10 @@ function drawTr(n){chips("#pd",[[86400,"1일"],[604800,"1주"],[1209600,"2주"],
 const now=S.length?S[S.length-1].ts:0,p=S.filter(x=>x.ranks[n]&&(!PD||x.ts>=now-PD));
 $("#trc").innerHTML=p.length<2?`<div class="mu" style="margin-top:8px">기록이 2회 이상 쌓이면 그래프가 나와요 (현재 ${p.length}회)</div>`:ch("랭킹 변화 추이",p.map(x=>[x.ts,x.ranks[n][0]]),1)+ch("레벨 변화 추이",p.map(x=>[x.ts,x.ranks[n][1]]),0)}
 t15();lt();tg();
-(function(){const cs=[...document.querySelectorAll(".cd")];cs.forEach((c,i)=>{c.classList.add("rv");c.style.transitionDelay=(i<4?i*90:0)+"ms"});
+(function(){const cs=[...document.querySelectorAll(".cd")],red=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+if(window.AOS){cs.forEach((c,i)=>{c.setAttribute("data-aos",red?"fade":"fade-up");c.setAttribute("data-aos-delay",String(i<4?i*100:0))});
+window.AOS.init({duration:800,once:true,offset:60,easing:"ease-out-cubic"});window.addEventListener("load",()=>window.AOS.refresh());return}
+cs.forEach((c,i)=>{c.classList.add("rv");c.style.transitionDelay=(i<4?i*90:0)+"ms"});
 let tk=0;const chk=()=>{tk=0;cs.forEach(c=>{if(!c.classList.contains("in")&&c.getBoundingClientRect().top<window.innerHeight*0.93){c.classList.add("in");setTimeout(()=>{c.style.transitionDelay=""},900)}})};
 const rq=()=>{if(!tk)tk=requestAnimationFrame(chk)};window.addEventListener("scroll",rq,{passive:true});window.addEventListener("resize",rq);setTimeout(chk,60)})();
 
