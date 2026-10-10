@@ -74,14 +74,24 @@ def main():
     ts = int(time.time())
     json.dump({"ts": ts, "base": base, "tabs": tabs, "counts": counts}, open(f"{OUT}/latest.json", "w", encoding="utf-8"), **J)
     ranks = {n: [i + 1, lv] for i, (lv, n, *_) in enumerate(tabs["all"])}
-    jm = {r[1]: r[2] for r in tabs["all"]}          # 닉네임 → 직업 (전체 랭킹)
-    seen = set()
+    LIFE = {"초급 광부", "중급 광부", "상급 광부", "땅울림", "초급 낚시꾼", "중급 낚시꾼", "상급 낚시꾼", "파도잡이",
+            "초급 대장장이", "중급 대장장이", "상급 대장장이", "철의 명장", "초급 연금사", "중급 연금사", "상급 연금사",
+            "초급 채집가", "중급 채집가", "상급 채집가", "초급 요리사", "중급 요리사"}
+    ent, first, seen = [], {}, set()               # 화면과 같은 규칙: 전체 랭킹 행은 모두 별개, 직업은 전체 랭킹 기준
+    for r in tabs["all"]:                          # (전체 랭킹의 직업이 생활직일 때만 무기 랭킹 직업으로 대체)
+        e = [r[1], r[2]]; ent.append(e)
+        if r[1] and r[1] not in first: first[r[1]] = e
     for k in ("sword", "greatsword", "spear", "dagger", "bow", "wand", "scythe", "knuckle", "gun"):
-        for r in tabs.get(k, []):                   # 무기 랭킹에 처음 나온 직업을 우선(화면과 같은 규칙)
-            if r[1] not in seen:
-                seen.add(r[1]); jm[r[1]] = r[2]
+        for r in tabs.get(k, []):
+            n = r[1]
+            if not n or n in seen: continue
+            seen.add(n)
+            if n in first:
+                if first[n][1] in LIFE: first[n][1] = r[2]
+            else:
+                e = [n, r[2]]; ent.append(e); first[n] = e
     jobs = {}
-    for j in jm.values():
+    for _, j in ent:
         jobs[j] = jobs.get(j, 0) + 1
     snap = {"ts": ts, "base": base, "counts": counts, "ranks": ranks, "jobs": jobs}
     if len(H["snaps"]) % 6 == 0:   # 6시간마다: 전체 랭킹 밖 무기 랭킹 플레이어의 레벨도 기록(성장 속도용)
